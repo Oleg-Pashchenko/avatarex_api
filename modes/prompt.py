@@ -29,6 +29,7 @@ async def prompt_request(*,
         )
 
         async for chunk in stream:
+            print(chunk)
             if chunk.choices[0].delta.content is not None:
                 resp = chunk.choices[0].delta.content
 
