@@ -34,7 +34,7 @@ class AmoCRMConnection:
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
         print('111')
-        async with aiohttp.ClientSession(cookies=self._cookies) as session:
+        async with aiohttp.ClientSession() as session:
             print('222')
             response = await session.post(url=url, headers=self._headers, data=payload)
             print(response.status)
@@ -43,7 +43,7 @@ class AmoCRMConnection:
                 self._chat_token = content['response']['chats']['session']['access_token']
             except:
                 pass  # TODO: оповестить об ошибке
-
+        print(self._chat_token)
     async def authorize(self):
         await self._create_session()
         print('session yes')
@@ -212,3 +212,4 @@ async def test():
 @timing_decorator
 def main():
     asyncio.run(test())
+
