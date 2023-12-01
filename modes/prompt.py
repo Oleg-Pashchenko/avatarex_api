@@ -52,6 +52,7 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
     messages: list[dict] = api.get_messages_history(lead_id=lead_id)
     messages_history: list[dict] = misc.get_messages_context(messages=messages, context=settings.context,
                                                              model=settings.model, max_tokens=settings.max_tokens)
+    print(messages_history)
     answer: str = await prompt_request(
         api_key=settings.api_key,
         model=settings.model,
@@ -60,4 +61,5 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
         temperature=settings.temperature,
         error_message=settings.error_message
     )
+    print('Я здесь был')
     return answer
