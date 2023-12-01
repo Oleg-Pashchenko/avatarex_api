@@ -34,7 +34,7 @@ class AmoCRMConnection:
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
         print(url)
-        response = requests.post(url=url, headers=self._headers, data=payload, cookies=self._cookies)
+        response = requests.post(url=url, headers=self._headers, data=payload)
         try:
             print(response.status_code)
             content = await response.json()
