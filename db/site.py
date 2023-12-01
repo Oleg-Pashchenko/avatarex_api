@@ -83,7 +83,7 @@ def is_stage_working(pipeline_id: int, stage_id: int):
     return result.as_dict()['is_active']
 
 
-def get_amo_settings(user_id: int) -> AmoConnect:
+def get_amo_settings(user_id: int) -> AmoSettings:
     q = session.query(AmoConnect).filter(AmoConnect.user_id == user_id)
     result = q.first().as_dict()
     return AmoSettings(**result)

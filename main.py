@@ -5,6 +5,7 @@ import asyncio
 from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from db import api, site
+from db.site import AmoConnect
 from modes.prompt import prompt_mode
 from services.misc import *
 from services import amocrm
@@ -32,8 +33,9 @@ async def amo_handler(owner_id):
     if not site.is_stage_working(lead.pipeline_id, lead.status_id):
         print("На данном статусе сделки бот не работает!")
         return 'ok'
-
-    amo_connection = amocrm.AmoCRMConnection(user_login='', user_password='', host='', token='')
+    amo_settings = site.get_amo_settings(owner_id)
+    amo_connection = amocrm.AmoCRMConnection(user_login=amo_settings.email, user_password=amo_settings.password,
+                                             host=amo_settings.host, token=amo_settings.account_chat_id)
     if not await amo_connection.authorize():
         print("Не удалось установить соединение с AmoCRM!")
         return 'ok'
