@@ -75,7 +75,7 @@ def add_message(message, lead_id, is_bot):
 @timing_decorator
 def update_lead(r_d):
     if r_d.get(NEW_CLIENT_KEY, None) and r_d.get(UNSORTED_LEAD_ID_KEY, None):  # New client
-        if not get_lead(r_d[UPDATE_LEAD_ID_KEY]):
+        if not get_lead(r_d[UNSORTED_LEAD_ID_KEY]):
             new_lead = LeadsEntity(id=r_d[UNSORTED_LEAD_ID_KEY], pipeline_id=r_d[NEW_CLIENT_KEY], status_id=0)
             session.add(new_lead)
 
