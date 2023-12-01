@@ -1,4 +1,9 @@
+import asyncio
+
 from quart import Quart, request
+import asyncio
+from hypercorn.asyncio import serve
+from hypercorn.config import Config
 from db import api, site
 from modes.prompt import prompt_mode
 from services.misc import *
@@ -47,5 +52,8 @@ async def amo_handler(owner_id):
     return print('Ответ:', answer)
 
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    config = Config()
+    config.bind = ["0.0.0.0:8000"]
+    asyncio.run(serve(app, config))
+
