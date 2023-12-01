@@ -9,6 +9,7 @@ from db.site import PromptModeSettings
 from modes import misc
 from services.misc import timing_decorator
 
+
 @timing_decorator
 async def prompt_request(*,
                          api_key: str = None,
@@ -18,7 +19,7 @@ async def prompt_request(*,
                          temperature: float = 1.0,
                          error_message: str = "Произошла ошибка настроек. Повторите запрос позднее!") -> str:
     client = AsyncOpenAI(api_key=api_key)
-    print('yes', await client.models.list())
+    print(client, 'client')
     try:
         response = await client.chat.completions.create(
             model=model,
@@ -44,6 +45,7 @@ async def prompt_request(*,
         error=error
     )
     return answer
+
 
 @timing_decorator
 async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
