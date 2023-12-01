@@ -33,17 +33,14 @@ class AmoCRMConnection:
     async def _create_chat_token(self):
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
-        print('111')
         async with aiohttp.ClientSession() as session:
-            print('222')
             response = await session.post(url=url, headers=self._headers, data=payload)
-            print(response.status)
             try:
                 content = await response.json()
                 self._chat_token = content['response']['chats']['session']['access_token']
             except:
                 pass  # TODO: оповестить об ошибке
-        print(self._chat_token)
+
     async def authorize(self):
         await self._create_session()
         print('session yes')
@@ -57,15 +54,13 @@ class AmoCRMConnection:
             async with session.post(url=url, data=payload, headers=self._headers) as response:
                 if response.status != 200:
                     return False  # TODO: оповестить об ошибке
-                print('hahaha')
                 self._cookies = response.cookies
                 self._access_token = self._cookies.get('access_token').value
                 self._refresh_token = self._cookies.get('refresh_token').value
 
                 self._headers['access_token'], self._headers['refresh_token'] = self._access_token, self._refresh_token
                 self._headers['Host'] = self.host.replace('https://', '').replace('/', '')
-                await self._create_chat_token()
-                print('hahahahah22')
+                # await self._create_chat_token()
                 return True
 
     async def get_unanswered_messages(self, search_info: list[list]):
@@ -212,4 +207,3 @@ async def test():
 @timing_decorator
 def main():
     asyncio.run(test())
-

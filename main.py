@@ -36,18 +36,14 @@ async def amo_handler(owner_id):
     amo_settings = site.get_amo_settings(owner_id)
     amo_connection = amocrm.AmoCRMConnection(user_login=amo_settings.email, user_password=amo_settings.password,
                                              host=amo_settings.host, token=amo_settings.account_chat_id)
-    print('yes0')
     status = await amo_connection.authorize()
-    print('yes1', status)
     if not status:
         print("Не удалось установить соединение с AmoCRM!")
         return 'ok'
-    print('yes2')
     amo_message, contact = await amo_connection.get_last_message(user_id_hash)
     if contact == 'user' or amo_message != message:
         print("Сообщение уже распознавалось")
         return 'ok'
-    print('Я тут')
     api.add_message(message=message, lead_id=lead_id, is_bot=False)
     working_mode = site.get_working_mode(lead.pipeline_id)
     print('Выбран', working_mode)
