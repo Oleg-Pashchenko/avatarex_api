@@ -74,18 +74,17 @@ def add_message(message, lead_id, is_bot):
 
 @timing_decorator
 def update_lead(r_d):
-    if r_d.get(NEW_CLIENT_KEY, None) and r_d.get(UNSORTED_LEAD_ID_KEY, None):  # New client
-        if not get_lead(r_d[UNSORTED_LEAD_ID_KEY]):
+    try:
+        lead = get_lead(r_d[UNSORTED_LEAD_ID_KEY])
+        if not lead:
             new_lead = LeadsEntity(id=r_d[UNSORTED_LEAD_ID_KEY], pipeline_id=r_d[NEW_CLIENT_KEY], status_id=0)
             session.add(new_lead)
-
-    elif r_d.get(UPDATE_LEAD_ID_KEY, None) and r_d.get(UPDATE_PIPELINE_KEY, None) \
-            and r_d.get(UPDATE_STATUS_ID_KEY, None):  # Update client
-        lead_obj = session.query(LeadsEntity).filter(LeadsEntity.id == r_d[UPDATE_LEAD_ID_KEY]).first()
-        lead_obj.pipeline_id, lead_obj.status_id = r_d[UPDATE_PIPELINE_KEY], r_d[UPDATE_STATUS_ID_KEY]
-
-    session.commit()
-
+        else:
+            lead_obj = session.query(LeadsEntity).filter(LeadsEntity.id == r_d[UPDATE_LEAD_ID_KEY]).first()
+            lead_obj.pipeline_id, lead_obj.status_id = r_d[UPDATE_PIPELINE_KEY], r_d[UPDATE_STATUS_ID_KEY]
+        session.commit()
+    except:
+        pass
 
 def get_lead(lead_id):
     return session.query(LeadsEntity).filter(LeadsEntity.id == lead_id).first()
