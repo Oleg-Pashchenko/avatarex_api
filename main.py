@@ -48,6 +48,7 @@ async def amo_handler(owner_id):
     api.add_message(message=message, lead_id=lead_id, is_bot=False)
     working_mode = site.get_working_mode(lead.pipeline_id)
     if working_mode == 'Prompt mode' or working_mode == 'Ответ по контексту':
+        print('Выбран режим работы по контексту')
         answer = await prompt_mode(lead_id=lead_id, pipeline_id=lead.pipeline_id,
                                    stage_id=lead.status_id, user_id=owner_id)
     else:
