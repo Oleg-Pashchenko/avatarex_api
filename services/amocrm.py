@@ -90,7 +90,6 @@ class AmoCRMConnection:
             url = f'{self.host}ajax/v2/talks'
             data = {'chats_ids[]': chat_id}
             response = requests.post(url=url, data=data, headers=self._headers).json()
-            print(response)
             for k, v in response.items():
                 v = v[0]
                 return v['last_message'], v['last_message_author']['type']
