@@ -41,6 +41,7 @@ async def amo_handler(owner_id):
         print("Не удалось установить соединение с AmoCRM!")
         return 'ok'
     amo_message, contact = await amo_connection.get_last_message(user_id_hash)
+    print(contact)
     if contact == 'user':
         print("Сообщение уже распознавалось")
         return 'ok'
