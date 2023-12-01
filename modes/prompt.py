@@ -26,18 +26,13 @@ async def prompt_request(*,
         'max_tokens': tokens_limit,
         'temperature': temperature
     }
-    try:
-        url = 'https://api.openai.com/v1/chat/completions'
-        async with aiohttp.ClientSession() as session:
-            response = await session.post(url=url, headers=headers, data=json.dumps(data))
-            print(response)
-            answer = await response.json()
-            print(answer)
-        answer = answer['choices'][0]['message']['content']
-        error = None
-    except Exception as e:
-        answer = error_message
-        error = e
+    error = None
+    url = 'https://api.openai.com/v1/chat/completions'
+    async with aiohttp.ClientSession() as session:
+        response = await session.post(url=url, headers=headers, data=json.dumps(data))
+        print(response)
+        answer = await response.json()
+        print(answer)
 
     logs.save_log(
         avatarex_id=1,
