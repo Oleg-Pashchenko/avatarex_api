@@ -4,7 +4,7 @@ import json
 import aiohttp
 import bs4
 import requests
-from misc import timing_decorator
+from services.misc import timing_decorator
 
 
 class AmoCRMConnection:
