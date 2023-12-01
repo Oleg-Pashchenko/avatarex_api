@@ -30,7 +30,9 @@ async def prompt_request(*,
         url = 'https://api.openai.com/v1/chat/completions'
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=url, headers=headers, data=json.dumps(data))
+            print(response)
             answer = await response.json()
+            print(answer)
         answer = answer['choices'][0]['message']['content']
         error = None
     except Exception as e:
