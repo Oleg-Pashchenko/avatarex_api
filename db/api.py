@@ -67,7 +67,7 @@ def add_message(message, lead_id, is_bot):
         message_id = f'assistant-{random.randint(1000000, 10000000)}'
     else:
         message_id = f'assistant-{random.randint(1000000, 10000000)}'
-    obj = Messages(id_id=0, id=message_id, message=message, lead_id=lead_id, is_bot=is_bot, date=datetime.datetime.now())
+    obj = MessagesEntity(id=message_id, message=message, lead_id=lead_id, is_bot=is_bot, date=datetime.datetime.now())
     session.add(obj)
     session.commit()
 
