@@ -29,22 +29,26 @@ async def amo_handler(owner_id):
     if not lead:
         print("Нет сделки по данному lead_id")
         return 'ok'
-
+    print('Сделка:', lead)
     if not site.is_stage_working(lead.pipeline_id, lead.status_id):
         print("На данном статусе сделки бот не работает!")
         return 'ok'
+    print(f"На стадии {lead.status_id} бот работает!")
     amo_settings = site.get_amo_settings(owner_id)
+    print(f'Настройки: {amo_settings}')
     amo_connection = amocrm.AmoCRMConnection(user_login=amo_settings.email, user_password=amo_settings.password,
                                              host=amo_settings.host, token=amo_settings.account_chat_id)
     status = await amo_connection.authorize()
     if not status:
         print("Не удалось установить соединение с AmoCRM!")
         return 'ok'
+    print('Удалось установить соединение')
     amo_message, contact = await amo_connection.get_last_message(user_id_hash)
+    print(f"Данные из амо: {amo_message} - {contact}")
     if contact == 'user' or amo_message != message:
         print("Сообщение уже распознавалось")
         return 'ok'
-    print('yes')
+
     api.add_message(message=message, lead_id=lead_id, is_bot=False)
     working_mode = site.get_working_mode(lead.pipeline_id)
     print('Выбран', working_mode)
