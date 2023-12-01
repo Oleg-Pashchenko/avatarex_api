@@ -26,6 +26,7 @@ async def amo_handler(owner_id):
         return 'ok'
     print(f"Получено новое сообщение от user_id: {owner_id}: {message}")
     lead = api.get_lead(lead_id)
+    print(lead)
     if not lead:
         print("Нет сделки по данному lead_id")
         return 'ok'
@@ -33,6 +34,7 @@ async def amo_handler(owner_id):
     if not site.is_stage_working(lead.pipeline_id, lead.status_id):
         print("На данном статусе сделки бот не работает!")
         return 'ok'
+    print('yes')
     amo_settings = site.get_amo_settings(owner_id)
     amo_connection = amocrm.AmoCRMConnection(user_login=amo_settings.email, user_password=amo_settings.password,
                                              host=amo_settings.host, token=amo_settings.account_chat_id)
