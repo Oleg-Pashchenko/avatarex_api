@@ -33,7 +33,7 @@ async def prompt_request(*,
                 resp = chunk.choices[0].delta.content
 
         error = None
-        answer: str = response.choices[0].message.content
+        answer: str = resp
     except Exception as e:
         error = e
         answer: str = error_message
