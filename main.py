@@ -14,7 +14,7 @@ app = Quart(__name__)
 
 
 @timing_decorator
-@app.route('/api/v1/amocrm/<username>', methods=['POST'])
+@app.route('/api/v1/amocrm/<owner_id>', methods=['POST'])
 async def amo_handler(owner_id):
     data = dict(await request.values)
     api.update_lead(data)
