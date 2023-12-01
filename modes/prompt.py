@@ -2,6 +2,7 @@ import asyncio
 import json
 
 import aiohttp
+import httpx
 import openai
 import requests as requests
 
@@ -28,8 +29,8 @@ async def prompt_request(*,
     }
     error = None
     url = 'https://api.openai.com/v1/chat/completions'
-    async with aiohttp.ClientSession() as session:
-        response = await session.post(url=url, headers=headers, data=json.dumps(data))
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url=url, headers=headers, json=json.dumps(data))
         print(response)
         answer = await response.json()
         print(answer)
