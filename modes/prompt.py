@@ -32,6 +32,7 @@ async def prompt_request(*,
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=url, headers=headers, data=json.dumps(data))
             answer = await response.json()
+        print(answer)
         answer = answer['choices'][0]['message']['content']
         error = None
     except Exception as e:
