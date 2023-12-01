@@ -89,11 +89,8 @@ class AmoCRMConnection:
         try:
             url = f'{self.host}ajax/v2/talks'
             data = {'chats_ids[]': chat_id}
-
-            async with aiohttp.ClientSession(cookies=self._cookies) as session:
-                response = await session.post(url=url, data=data, headers=self._headers)
-                print(response)
-            response = await response.json()
+            response = requests.post(url=url, data=data, headers=self._headers).json()
+            print(response)
             for k, v in response.items():
                 v = v[0]
                 return v['last_message'], v['last_message_author']['type']
