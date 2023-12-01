@@ -82,9 +82,9 @@ class AmoCRMConnection:
     async def send_message(self, message: str, chat_id: str):
         headers = {'X-Auth-Token': self._chat_token}
         url = f'https://amojo.amocrm.ru/v1/chats/{self.amo_hash}/{chat_id}/messages?with_video=true&stand=v16'
-        async with aiohttp.ClientSession(cookies=self._cookies) as session:
-            response = await session.post(url=url, data=json.dumps({"text": message}), headers=headers)
-            return response.status == 200
+
+        response = requests.post(url=url, data=json.dumps({"text": message}), headers=headers)
+        return response.status_code == 200
 
     async def get_last_message(self, chat_id):
         try:

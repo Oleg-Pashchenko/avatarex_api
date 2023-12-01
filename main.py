@@ -55,9 +55,9 @@ async def amo_handler(owner_id):
     else:
         answer = 'Бот сейчас не работает в этом режиме!'
 
-    await amo_connection.send_message(answer, user_id_hash)
+    status = await amo_connection.send_message(answer, user_id_hash)
     api.add_message(message=answer, lead_id=lead_id, is_bot=True)
-    print('Ответ:', answer)
+    print('Ответ:', answer, status)
     return 'ok'
 
 
