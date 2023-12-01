@@ -33,14 +33,14 @@ class AmoCRMConnection:
     async def _create_chat_token(self):
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
-        async with aiohttp.ClientSession() as session:
-            response = await session.post(url=url, headers=self._headers, data=payload)
-            try:
-                content = await response.json()
-                self._chat_token = content['response']['chats']['session']['access_token']
-            except:
-                pass  # TODO: оповестить об ошибке
 
+        response = requests.post(url=url, headers=self._headers, data=payload)
+        try:
+            content = await response.json()
+            self._chat_token = content['response']['chats']['session']['access_token']
+        except:
+            pass  # TODO: оповестить об ошибке
+        print(self._chat_token)
     async def authorize(self):
         await self._create_session()
         url = f'{self.host}oauth2/authorize'
@@ -59,7 +59,7 @@ class AmoCRMConnection:
 
                 self._headers['access_token'], self._headers['refresh_token'] = self._access_token, self._refresh_token
                 self._headers['Host'] = self.host.replace('https://', '').replace('/', '')
-                # await self._create_chat_token()
+                await self._create_chat_token()
                 return True
 
     async def get_unanswered_messages(self, search_info: list[list]):
