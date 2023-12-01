@@ -43,6 +43,7 @@ class AmoCRMConnection:
 
     async def authorize(self):
         await self._create_session()
+        print('session yes')
         url = f'{self.host}oauth2/authorize'
         payload = {
             'csrf_token': self._csrf_token,
@@ -53,7 +54,7 @@ class AmoCRMConnection:
             async with session.post(url=url, data=payload, headers=self._headers) as response:
                 if response.status != 200:
                     return False  # TODO: оповестить об ошибке
-
+                print('hahaha')
                 self._cookies = response.cookies
                 self._access_token = self._cookies.get('access_token').value
                 self._refresh_token = self._cookies.get('refresh_token').value
@@ -61,6 +62,7 @@ class AmoCRMConnection:
                 self._headers['access_token'], self._headers['refresh_token'] = self._access_token, self._refresh_token
                 self._headers['Host'] = self.host.replace('https://', '').replace('/', '')
                 await self._create_chat_token()
+                print('hahahahah22')
                 return True
 
     async def get_unanswered_messages(self, search_info: list[list]):
