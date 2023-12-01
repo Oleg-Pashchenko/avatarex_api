@@ -87,4 +87,4 @@ def update_lead(r_d):
 
 
 def get_lead(lead_id):
-    return session.query(Leads).filter_by(id=lead_id).first()
+    return session.query(LeadsEntity).filter(LeadsEntity.id == lead_id).first()
