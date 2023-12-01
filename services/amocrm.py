@@ -88,16 +88,19 @@ class AmoCRMConnection:
             return response.status == 200
 
     async def get_last_message(self, chat_id):
-        url = f'{self.host}ajax/v2/talks'
-        data = {'chats_ids[]': chat_id}
+        try:
+            url = f'{self.host}ajax/v2/talks'
+            data = {'chats_ids[]': chat_id}
 
-        async with aiohttp.ClientSession(cookies=self._cookies) as session:
-            response = await session.post(url=url, data=data, headers=self._headers)
+            async with aiohttp.ClientSession(cookies=self._cookies) as session:
+                response = await session.post(url=url, data=data, headers=self._headers)
 
-        response = await response.json()
-        for k, v in response.items():
-            v = v[0]
-            return v['last_message'], v['last_message_author']['type']
+            response = await response.json()
+            for k, v in response.items():
+                v = v[0]
+                return v['last_message'], v['last_message_author']['type']
+        except:
+            return '', 'contact'
 
     async def _create_field(self, name):
         url = f'{self.host}ajax/settings/custom_fields/'

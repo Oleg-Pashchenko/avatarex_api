@@ -89,6 +89,11 @@ def get_amo_settings(user_id: int) -> AmoConnect:
     return AmoSettings(**result)
 
 
+def get_working_mode(pipeline_id: int) -> str:
+    pipeline = _get_pipeline(pipeline_id)
+    return pipeline.chosen_work_mode
+
+
 def _get_pipeline(pipeline_id: int):
     q = session.query(Pipelines).filter(Pipelines.p_id == pipeline_id)
     result = q.first().as_dict()

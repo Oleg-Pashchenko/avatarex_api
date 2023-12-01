@@ -1,21 +1,50 @@
 from quart import Quart, request
-
-from modes.prompt import prompt_request
-from modes.knowledge import knowledge_request
+from db import api, site
+from modes.prompt import prompt_mode
+from services.misc import *
+from services import amocrm
 
 api_key = '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'
 app = Quart(__name__)
 
 
-@app.route('/reserve')
-async def reserve_prompt_mode():
-    pass  # Here get user_id by deal_id and execute it
-
-
+@timing_decorator
 @app.route('/api/v1/amocrm/<username>', methods=['POST'])
-async def amo_handler():
+async def amo_handler(owner_id):
     data = dict(await request.values)
-    print(data)
+    api.update_lead(data)
+    message, lead_id = data.get(MESSAGE_KEY, None), data.get(LEAD_KEY, None)
+    user_id_hash = data.get(USER_ID_HASH_KEY, None)
+
+    if not (message and lead_id and user_id_hash):
+        return
+    print(f"Получено новое сообщение от user_id: {owner_id}: {message}")
+    lead = api.get_lead(lead_id)
+    if not lead:
+        return print("Нет сделки по данному lead_id")
+
+    if not site.is_stage_working(lead.pipeline_id, lead.status_id):
+        return print("На данном статусе сделки бот не работает!")
+
+    amo_connection = amocrm.AmoCRMConnection(user_login='', user_password='', host='', token='')
+    if not await amo_connection.authorize():
+        return print("Не удалось установить соединение с AmoCRM!")
+
+    _, contact = await amo_connection.get_last_message(user_id_hash)
+    if contact == 'user':
+        return print("Сообщение уже распознавалось")
+
+    api.add_message(message=message, lead_id=lead_id, is_bot=False)
+    working_mode = site.get_working_mode(lead.pipeline_id)
+    if working_mode == 'Prompt mode' or working_mode == 'Ответ по контексту':
+        answer = await prompt_mode(lead_id=lead_id, pipeline_id=lead.pipeline_id,
+                                   stage_id=lead.status_id, user_id=owner_id)
+    else:
+        answer = 'Бот сейчас не работает в этом режиме!'
+
+    await amo_connection.send_message(answer, user_id_hash)
+    api.add_message(message=answer, lead_id=lead_id, is_bot=True)
+    return print('Ответ:', answer)
 
 
 if __name__ == "__main__":
