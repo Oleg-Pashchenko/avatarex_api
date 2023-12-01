@@ -38,6 +38,7 @@ class AmoCRMConnection:
         try:
             print(response.status_code)
             content = await response.json()
+            print(content)
             self._chat_token = content['response']['chats']['session']['access_token']
         except:
             pass  # TODO: оповестить об ошибке
