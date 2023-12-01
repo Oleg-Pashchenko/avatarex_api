@@ -29,7 +29,7 @@ async def prompt_request(*,
     try:
         url = 'https://api.openai.com/v1/chat/completions'
         response = requests.post(url=url, headers=headers, data=json.dumps(data))
-        answer = await response.json()
+        answer = response.json()
         answer = answer['choices'][0]['message']['content']
 
     except Exception as e:
