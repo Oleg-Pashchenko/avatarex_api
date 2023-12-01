@@ -7,8 +7,9 @@ from openai import AsyncOpenAI, OpenAI
 from db import logs, site, api
 from db.site import PromptModeSettings
 from modes import misc
+from services.misc import timing_decorator
 
-
+@timing_decorator
 async def prompt_request(*,
                          api_key: str = None,
                          model: str = "gpt-3.5-turbo",
@@ -44,9 +45,10 @@ async def prompt_request(*,
     )
     return answer
 
-
+@timing_decorator
 async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
-    settings: PromptModeSettings = site.get_prompt_mode_settings(user_id=user_id, pipeline_id=pipeline_id, stage_id=stage_id)
+    settings: PromptModeSettings = site.get_prompt_mode_settings(user_id=user_id, pipeline_id=pipeline_id,
+                                                                 stage_id=stage_id)
     messages: list[dict] = api.get_messages_history(lead_id=lead_id)
     messages_history: list[dict] = misc.get_messages_context(messages=messages, context=settings.context,
                                                              model=settings.model, max_tokens=settings.max_tokens)
@@ -59,5 +61,3 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
         error_message=settings.error_message
     )
     return answer
-
-
