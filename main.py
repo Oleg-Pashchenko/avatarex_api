@@ -22,7 +22,7 @@ async def amo_handler(owner_id):
     user_id_hash = data.get(USER_ID_HASH_KEY, None)
 
     if not (message and lead_id and user_id_hash):
-        return
+        return 'ok'
     print(f"Получено новое сообщение от user_id: {owner_id}: {message}")
     lead = api.get_lead(lead_id)
     if not lead:
