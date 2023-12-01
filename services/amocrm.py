@@ -39,6 +39,7 @@ class AmoCRMConnection:
         self._chat_token = response['response']['chats']['session']['access_token']
 
         print(self._chat_token)
+
     async def authorize(self):
         await self._create_session()
         url = f'{self.host}oauth2/authorize'
