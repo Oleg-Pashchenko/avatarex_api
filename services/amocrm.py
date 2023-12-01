@@ -37,6 +37,7 @@ class AmoCRMConnection:
         async with aiohttp.ClientSession(cookies=self._cookies) as session:
             print('222')
             response = await session.post(url=url, headers=self._headers, data=payload)
+            print(response.status)
             try:
                 content = await response.json()
                 self._chat_token = content['response']['chats']['session']['access_token']
