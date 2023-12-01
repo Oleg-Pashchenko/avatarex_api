@@ -1,8 +1,9 @@
 import asyncio
+import json
 
+import aiohttp
 import openai
 import requests as requests
-from openai import AsyncOpenAI, OpenAI
 
 from db import logs, site, api
 from db.site import PromptModeSettings
@@ -18,29 +19,25 @@ async def prompt_request(*,
                          tokens_limit: int = 1000,
                          temperature: float = 1.0,
                          error_message: str = "Произошла ошибка настроек. Повторите запрос позднее!") -> str:
-    client = AsyncOpenAI(api_key=api_key)
+    headers = {'Authorization': f'Bearer {api_key}', "Content-Type": "application/json"}
+    data = {
+        'model': model,
+        'messages': messages_history,
+        'max_tokens': tokens_limit,
+        'temperature': temperature
+    }
     try:
-        stream = await client.chat.completions.create(
-            model=model,
-            messages=messages_history,
-            max_tokens=tokens_limit,
-            temperature=temperature,
-            stream=True
-        )
+        url = 'https://api.openai.com/v1/chat/completions'
 
-        async for chunk in stream:
-            print(chunk)
-            if chunk.choices[0].delta.content is not None:
-                resp = chunk.choices[0].delta.content
-
+        async with aiohttp.ClientSession() as session:
+            response = await session.post(url=url, headers=headers, data=json.dumps(data))
+            answer = await response.json()
+        answer = answer['choices'][0]['message']['content']
         error = None
-        answer: str = resp
     except Exception as e:
+        answer = error_message
         error = e
-        answer: str = error_message
 
-    await client.close()
-    print('no')
     logs.save_log(
         avatarex_id=1,
         pipeline_id=1,
@@ -59,7 +56,6 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
     messages: list[dict] = api.get_messages_history(lead_id=lead_id)
     messages_history: list[dict] = misc.get_messages_context(messages=messages, context=settings.context,
                                                              model=settings.model, max_tokens=settings.max_tokens)
-    print(messages_history)
     answer: str = await prompt_request(
         api_key=settings.api_key,
         model=settings.model,
@@ -68,5 +64,19 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
         temperature=settings.temperature,
         error_message=settings.error_message
     )
-    print('Я здесь был')
     return answer
+
+
+"""
+print(asyncio.run(prompt_request(api_key='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',
+                           messages_history=[
+                               {
+                                   "role": "system",
+                                   "content": "You are a helpful assistant."
+                               },
+                               {
+                                   "role": "user",
+                                   "content": "Hello!"
+                               }
+                           ])))
+"""
