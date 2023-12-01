@@ -26,6 +26,7 @@ async def prompt_request(*,
         'max_tokens': tokens_limit,
         'temperature': temperature
     }
+    error = None
     try:
         url = 'https://api.openai.com/v1/chat/completions'
         response = requests.post(url=url, headers=headers, data=json.dumps(data))
