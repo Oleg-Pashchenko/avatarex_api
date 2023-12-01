@@ -33,9 +33,10 @@ class AmoCRMConnection:
     async def _create_chat_token(self):
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
-
-        response = requests.post(url=url, headers=self._headers, data=payload)
+        print(url)
+        response = requests.post(url=url, headers=self._headers, data=payload, cookies=self._cookies)
         try:
+            print(response.status_code)
             content = await response.json()
             self._chat_token = content['response']['chats']['session']['access_token']
         except:

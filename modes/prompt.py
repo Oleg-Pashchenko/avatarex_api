@@ -28,11 +28,9 @@ async def prompt_request(*,
     }
     try:
         url = 'https://api.openai.com/v1/chat/completions'
-
         async with aiohttp.ClientSession() as session:
             response = await session.post(url=url, headers=headers, data=json.dumps(data))
             answer = await response.json()
-        print(answer)
         answer = answer['choices'][0]['message']['content']
         error = None
     except Exception as e:
@@ -57,7 +55,6 @@ async def prompt_mode(user_id: int, pipeline_id: int, stage_id: int, lead_id):
     messages: list[dict] = api.get_messages_history(lead_id=lead_id)
     messages_history: list[dict] = misc.get_messages_context(messages=messages, context=settings.context,
                                                              model=settings.model, max_tokens=settings.max_tokens)
-    print(settings)
 
     answer: str = await prompt_request(
         api_key=settings.api_key,
