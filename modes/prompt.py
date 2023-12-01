@@ -20,14 +20,13 @@ async def prompt_request(*,
                          error_message: str = "Произошла ошибка настроек. Повторите запрос позднее!") -> str:
     client = AsyncOpenAI(api_key=api_key)
     try:
-        response = client.chat.completions.create(
+        response = await client.chat.completions.create(
             model=model,
             messages=messages_history,
             max_tokens=tokens_limit,
             temperature=temperature
         )
-        print(response)
-        print(await response)
+        print("RESP", response)
         error = None
         answer: str = response.choices[0].message.content
     except Exception as e:
