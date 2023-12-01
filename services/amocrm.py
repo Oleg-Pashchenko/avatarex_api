@@ -92,7 +92,7 @@ class AmoCRMConnection:
 
             async with aiohttp.ClientSession(cookies=self._cookies) as session:
                 response = await session.post(url=url, data=data, headers=self._headers)
-
+                print(response)
             response = await response.json()
             for k, v in response.items():
                 v = v[0]
