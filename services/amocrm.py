@@ -43,7 +43,6 @@ class AmoCRMConnection:
 
     async def authorize(self):
         await self._create_session()
-        print('session yes')
         url = f'{self.host}oauth2/authorize'
         payload = {
             'csrf_token': self._csrf_token,

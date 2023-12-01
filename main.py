@@ -44,6 +44,7 @@ async def amo_handler(owner_id):
     if contact == 'user':
         print("Сообщение уже распознавалось")
         return 'ok'
+    print('yes')
     api.add_message(message=message, lead_id=lead_id, is_bot=False)
     working_mode = site.get_working_mode(lead.pipeline_id)
     print('Выбран', working_mode)
