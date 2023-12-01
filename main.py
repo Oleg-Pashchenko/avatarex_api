@@ -36,8 +36,10 @@ async def amo_handler(owner_id):
     amo_settings = site.get_amo_settings(owner_id)
     amo_connection = amocrm.AmoCRMConnection(user_login=amo_settings.email, user_password=amo_settings.password,
                                              host=amo_settings.host, token=amo_settings.account_chat_id)
-    print('yes1')
-    if not await amo_connection.authorize():
+    print('yes0')
+    status = await amo_connection.authorize()
+    print('yes1', status)
+    if not status:
         print("Не удалось установить соединение с AmoCRM!")
         return 'ok'
     print('yes2')
