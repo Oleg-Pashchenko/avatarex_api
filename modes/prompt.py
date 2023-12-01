@@ -29,11 +29,13 @@ async def prompt_request(*,
     }
     error = None
     url = 'https://api.openai.com/v1/chat/completions'
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url=url, headers=headers, json=json.dumps(data))
-        print(response)
-        answer = await response.json()
-        print(answer)
+    print('yes')
+    client = httpx.AsyncClient()
+    print(client)
+    response = await client.post(url=url, headers=headers, json=json.dumps(data))
+    print(response)
+    answer = await response.json()
+    print(answer)
 
     logs.save_log(
         avatarex_id=1,
