@@ -33,14 +33,15 @@ class AmoCRMConnection:
     async def _create_chat_token(self):
         url = f'{self.host}ajax/v1/chats/session'
         payload = {'request[chats][session][action]': 'create'}
+        print('111')
         async with aiohttp.ClientSession(cookies=self._cookies) as session:
-            async with session.post(url=url, headers=self._headers, data=payload) as response:
-                print('yesssssss', await response.text())
-                try:
-                    content = await response.json()
-                    self._chat_token = content['response']['chats']['session']['access_token']
-                except:
-                    pass  # TODO: оповестить об ошибке
+            print('222')
+            response = await session.post(url=url, headers=self._headers, data=payload)
+            try:
+                content = await response.json()
+                self._chat_token = content['response']['chats']['session']['access_token']
+            except:
+                pass  # TODO: оповестить об ошибке
 
     async def authorize(self):
         await self._create_session()
