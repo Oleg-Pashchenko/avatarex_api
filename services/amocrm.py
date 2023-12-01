@@ -35,6 +35,7 @@ class AmoCRMConnection:
         payload = {'request[chats][session][action]': 'create'}
         print(url)
         response = requests.post(url=url, headers=self._headers, data=payload)
+        print(response.text)
         try:
             print(response.status_code)
             content = await response.json()
